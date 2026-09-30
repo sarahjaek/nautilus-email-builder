@@ -1,10 +1,9 @@
 // src/app/api/send/route.tsx
 // receives the email from the editor, turns it into HTML, sends it with resend
 
-import { Render, type Data } from "@puckeditor/core";
-import { Body, Html, render } from "@react-email/components";
+import type { Data } from "@puckeditor/core";
 import { Resend } from "resend";
-import { config } from "../../editor/config";
+import { renderEmail } from "../../editor/renderEmail";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -23,15 +22,18 @@ export async function POST(request: Request) {
   if (!subject?.trim()) {
     return Response.json({ error: "Subject is required" }, { status: 400 });
   }
+  if (!Array.isArray(data?.content) || data.content.length === 0) {
+    return Response.json({ error: "Email content is required" }, { status: 400 });
+  }
 
   // 3. turn the puck data into email html, using the same config as the editor
-  const html = await render(
-    <Html>
-      <Body>
-        <Render config={config} data={data} />
-      </Body>
-    </Html>
-  );
+  let html: string;
+  try {
+    html = await renderEmail(data);
+  } catch (err) {
+    console.error("Failed to render email:", err);
+    return Response.json({ error: "Failed to render email" }, { status: 500 });
+  }
 
   // 4. send it
   const { data: sent, error } = await resend.emails.send({

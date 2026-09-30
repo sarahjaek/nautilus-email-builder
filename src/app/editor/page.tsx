@@ -24,7 +24,7 @@ export default function EditorPage() {
   const [puckData, setPuckData] = useState<Data>(initialData); // latest editor contents, updated on every change
   const [status, setStatus] = useState<Status>("idle");
 
-  // sends the current email to the server route, which sends it with resend
+  // sends the current email to the server route, which renders it to html and sends it with resend
   async function handleSend() {
     setStatus("sending");
     try {
