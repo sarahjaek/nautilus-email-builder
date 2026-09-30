@@ -21,7 +21,7 @@ import {
 
 type Components = {
   HeadingBlock: { text: string; color: string };
-  TextBlock: {text: string; fontSize: number};
+  TextBlock: {text: string; fontSize: 10 | 11 | 13 | 18}; // font size in pt
   ButtonBlock: { text: string; href: string; backgroundColor: string; color: string };
   LinkBlock: { text: string; href: string; color: string };
   ImageBlock: { src: string; alt: string; width: number };
@@ -50,11 +50,20 @@ export const config: Config<Components> = {
     TextBlock: {
         fields: {
           text: { type: "text" },
-          fontSize: { type: "number"}
+          fontSize: {
+            type: "select",
+            label: "Text size",
+            options: [
+              { label: "Small", value: 10 },
+              { label: "Normal", value: 11 },
+              { label: "Large", value: 13 },
+              { label: "Huge", value: 18 },
+            ],
+          }
         },
-        defaultProps: {text: "Hello", fontSize: 3},
+        defaultProps: {text: "Hello", fontSize: 11},
         render: ({ text, fontSize }) => (
-            <Text style = {{ fontSize: fontSize}}>{text}</Text>
+            <Text style = {{ fontSize: `${fontSize}pt`}}>{text}</Text>
         ),
       },
 
