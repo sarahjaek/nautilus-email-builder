@@ -102,7 +102,7 @@ temporal server start-dev
 
 ## Time Spent
 
-<!-- Track your time here -->
+2 hours spent so far - 6pm
 
 ## Resources
 
