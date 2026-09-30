@@ -66,7 +66,8 @@ export default function EditorPage() {
         <button
           onClick={handleSend}
           disabled={status === "sending"}
-          className="rounded bg-black px-4 py-1.5 text-sm font-medium text-white disabled:opacity-50"
+          className="rounded px-4 py-1.5 text-sm font-medium text-white"
+          style={{ backgroundColor: "#000000", opacity: status === "sending" ? 0.5 : 1 }}
         >
           {status === "sending" ? "Sending..." : "Send"}
         </button>
