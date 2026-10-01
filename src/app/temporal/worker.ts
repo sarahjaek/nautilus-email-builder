@@ -5,14 +5,18 @@ import * as activities from "./activities";
 
 async function main() {
   const connection = await NativeConnection.connect({
-    address: "localhost:7233",
+    address: process.env.TEMPORAL_ADDRESS ?? "localhost:7233",
+    tls: process.env.TEMPORAL_TLS === "true",
+  ...  (process.env.TEMPORAL_API_KEY
+    ?   { apiKey: process.env.TEMPORAL_API_KEY }
+    :   {}),
   });
 
   try {
     const worker = await Worker.create({
       connection,
-      namespace: "default",
-      taskQueue: "email-sending",
+      namespace: process.env.TEMPORAL_NAMESPACE ?? "default",
+      taskQueue: process.env.TEMPORAL_TASK_QUEUE ?? "email-sending",
       workflowsPath: require.resolve("./workflows"),
       activities,
     });
@@ -25,6 +29,10 @@ async function main() {
 }
 
 main().catch((error) => {
+  if (!process.env.RESEND_API_KEY) {
+      throw new Error("RESEND_API_KEY is missing");
+      }
   console.error(error);
   process.exitCode = 1;
 });
+

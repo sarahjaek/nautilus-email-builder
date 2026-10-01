@@ -7,8 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "worker": "tsx --env-file=.env.local src/temporal/worker.ts"
-  },
+    "worker": "tsx --env-file=.env.local src/app/temporal/worker.ts"
+    },
   "dependencies": {
     "@puckeditor/core": "^0.21.1",
     "@react-email/components": "^1.0.9",
