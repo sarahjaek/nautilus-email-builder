@@ -4,6 +4,7 @@
 import type { Data } from "@puckeditor/core";
 import { Resend } from "resend";
 import { renderEmail } from "../../editor/renderEmail";
+import { NextResponse } from "next/server";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -43,8 +44,10 @@ export async function POST(request: Request) {
     html,
   });
 
-  if (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+  if (error || !sent) {
+    return NextResponse.json(
+      { error: error?.message ?? "No email ID returned" },
+      { status: 500 }
+    );
   }
-  return Response.json({ id: sent.id });
 }

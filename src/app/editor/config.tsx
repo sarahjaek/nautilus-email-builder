@@ -21,7 +21,7 @@ import {
 
 type Components = {
   HeadingBlock: { text: string; color: string };
-  TextBlock: {text: string; fontSize: 10 | 11 | 13 | 18}; // font size in pt
+  TextBlock: {text: string; fontSize: 10 | 11 | 13 | 18; fontFamily: string}; // font size in pt, fontFamily is a css font stack
   ButtonBlock: { text: string; href: string; backgroundColor: string; color: string };
   LinkBlock: { text: string; href: string; color: string };
   ImageBlock: { src: string; alt: string; width: number };
@@ -35,6 +35,12 @@ type Components = {
 };
 
 export const config: Config<Components> = {
+  // wraps every block: keeps the email ~800px wide and centered, in the editor and the sent email
+  root: {
+    render: ({ children }) => (
+      <Container style={{ maxWidth: "800px", width: "100%", margin: "0 auto" }}>{children}</Container>
+    ),
+  },
   components: {
     HeadingBlock: {
       fields: {
@@ -43,7 +49,8 @@ export const config: Config<Components> = {
       },
       defaultProps: { text: "Hello", color: "#000000"},
       render: ({ text, color }) => (
-        <Heading style = {{color: color }}>{text}</Heading>
+        // explicit size/weight: tailwind's css reset makes headings inherit normal text size in the editor
+        <Heading style = {{color: color, fontSize: "24pt", fontWeight: "bold" }}>{text}</Heading>
       ),
     },
 
@@ -59,11 +66,25 @@ export const config: Config<Components> = {
               { label: "Large", value: 13 },
               { label: "Huge", value: 18 },
             ],
+          },
+          // each font falls back to arial if the reader's device doesn't have it
+          fontFamily: {
+            type: "select",
+            label: "Font",
+            options: [
+              { label: "Arial", value: "Arial, sans-serif" },
+              { label: "Comic Sans MS", value: "'Comic Sans MS', Arial, sans-serif" },
+              { label: "Georgia", value: "Georgia, Arial, sans-serif" },
+              { label: "Garamond", value: "Garamond, Arial, sans-serif" },
+              { label: "Tahoma", value: "Tahoma, Arial, sans-serif" },
+              { label: "Times New Roman", value: "'Times New Roman', Arial, sans-serif" },
+              { label: "Verdana", value: "Verdana, Arial, sans-serif" },
+            ],
           }
         },
-        defaultProps: {text: "Hello", fontSize: 11},
-        render: ({ text, fontSize }) => (
-            <Text style = {{ fontSize: `${fontSize}pt`}}>{text}</Text>
+        defaultProps: {text: "Hello", fontSize: 11, fontFamily: "Arial, sans-serif"},
+        render: ({ text, fontSize, fontFamily }) => (
+            <Text style = {{ fontSize: `${fontSize}pt`, fontFamily: fontFamily ?? "Arial, sans-serif"}}>{text}</Text> // ?? covers blocks added before the font option existed
         ),
       },
 
@@ -102,7 +123,7 @@ export const config: Config<Components> = {
       },
       defaultProps: { src: "https://placehold.co/600x200", alt: "", width: 600 },
       render: ({ src, alt, width }) => (
-        <Img src={src} alt={alt} width={width} style={{ maxWidth: "100%" }} />
+        <Img src={src} alt={alt} width={width} style={{ maxWidth: "100%", margin: "0 auto" }} />
       ),
     },
 
@@ -198,6 +219,15 @@ export const config: Config<Components> = {
     },
   },
 };
+
+// small default padding around every block, added once here instead of in each render
+// (the editor and the sent email both use these render functions, so both get it)
+for (const block of Object.values(config.components)) {
+  const render = block.render as (props: object) => React.ReactNode;
+  (block as { render: unknown }).render = (props: object) => (
+    <div style={{ padding: "8px" }}>{render(props)}</div>
+  );
+}
 
 
 

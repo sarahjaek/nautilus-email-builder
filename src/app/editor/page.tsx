@@ -80,6 +80,7 @@ export default function EditorPage() {
             data={{}}
             height="100%"
             onChange={setPuckData}
+            overrides={{ headerActions: () => <></> }} // hides puck's default header actions (the publish button)
             onPublish={(data) => { // Called when user presses publish, hands finished page as json.
                 console.log(data);
               }} />
