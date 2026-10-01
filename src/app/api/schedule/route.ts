@@ -74,6 +74,11 @@ export async function POST(request: Request) {
 
       // Start the workflow and return without waiting for delivery.
       const handle = await client.workflow.start("scheduledEmail", {
+        memo: { // provides display information returned when listing workflows
+            recipient,
+            subject: subject.trim(),
+            sendAt: new Date(timestamp).toISOString(),
+          },
         taskQueue:
           process.env.TEMPORAL_TASK_QUEUE ?? "email-sending",
         workflowId: `email-${emailId}`,

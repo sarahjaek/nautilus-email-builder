@@ -5,6 +5,7 @@
 import { useState } from "react";
 import { Puck, type Data } from "@puckeditor/core";
 import "@puckeditor/core/puck.css";
+import ScheduledEmails from "./ScheduledEmails";
 import { config } from "./config";
 
 const initialData = { content: [], root: {} };
@@ -26,6 +27,7 @@ export default function EditorPage() {
   const [sendAt, setSendAt] = useState("");
   const [isScheduling, setIsScheduling] = useState(false);
   const [scheduleMessage, setScheduleMessage] = useState("");
+  const [listRefreshKey, setListRefreshKey] = useState(0);
 
   // sends the current email to the server route, which renders it to html and sends it with resend
   async function handleSend() {
@@ -71,6 +73,7 @@ export default function EditorPage() {
       }
   
       setScheduleMessage("Email scheduled!");
+      setListRefreshKey((value) => value + 1);
     } catch (error) {
       setScheduleMessage(
         error instanceof Error ? error.message : "Failed to schedule email"
@@ -147,6 +150,8 @@ export default function EditorPage() {
             overrides={{ headerActions: () => <></> }} // hides puck's default header actions (the publish button)
              />
       </div>
+
+      <ScheduledEmails refreshKey={listRefreshKey} />
       {status !== "idle" && (
         <div className={`fixed bottom-4 right-4 z-50 rounded px-4 py-2 text-white shadow-lg ${notifications[status].className}`}>
           {notifications[status].message}
