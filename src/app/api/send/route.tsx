@@ -6,17 +6,16 @@ import { Resend } from "resend";
 import { renderEmail } from "../../editor/renderEmail";
 import { NextResponse } from "next/server";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: Request) {
-  // 1. read what the page sent
+  // 1.read what the page sent
   const { recipient, subject, data } = (await request.json()) as {
     recipient: string;
     subject: string;
     data: Data;
   };
 
-  // 2. check the input before using it
+  // 2.check the input before using it
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(recipient ?? "")) {
     return NextResponse.json({ error: "Invalid recipient email" }, { status: 400 });
   }
@@ -27,7 +26,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Email content is required" }, { status: 400 });
   }
 
-  // 3. turn the puck data into email html, using the same config as the editor
+  // 3.turn the puck data into email html, using the same config as the editor
   let html: string;
   try {
     html = await renderEmail(data);
@@ -36,6 +35,16 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Failed to render email" }, { status: 500 });
   }
 
+  const apiKey = process.env.RESEND_API_KEY;
+
+  if (!apiKey) {
+    return NextResponse.json(
+      { error: "Email service is not configured" },
+      { status: 500 }
+    );
+  }
+
+  const resend = new Resend(apiKey);
   // 4. send it
   const { data: sent, error } = await resend.emails.send({
     from: process.env.RESEND_FROM_EMAIL ?? "onboarding@resend.dev",
