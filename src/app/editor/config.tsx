@@ -50,7 +50,7 @@ export const config: Config<Components> = {
       defaultProps: { text: "Hello", color: "#000000"},
       render: ({ text, color }) => (
         // explicit size/weight: tailwind's css reset makes headings inherit normal text size in the editor
-        <Heading style = {{color: color, fontSize: "24pt", fontWeight: "bold" }}>{text}</Heading>
+        <Heading style = {{textAlign: "left", color: color, fontSize: "24pt", fontWeight: "bold" }}>{text}</Heading>
       ),
     },
 
@@ -84,8 +84,16 @@ export const config: Config<Components> = {
         },
         defaultProps: {text: "Hello", fontSize: 11, fontFamily: "Arial, sans-serif"},
         render: ({ text, fontSize, fontFamily }) => (
-            <Text style = {{ fontSize: `${fontSize}pt`, fontFamily: fontFamily ?? "Arial, sans-serif"}}>{text}</Text> // ?? covers blocks added before the font option existed
-        ),
+            <Text
+              style={{
+                textAlign: "left",
+                fontSize: `${fontSize}pt`,
+                fontFamily: fontFamily ?? "Arial, sans-serif",
+              }}
+            >
+              {text}
+            </Text>
+          ),
       },
 
     ButtonBlock: {
