@@ -38,7 +38,17 @@ export const config: Config<Components> = {
   // wraps every block: keeps the email ~800px wide and centered, in the editor and the sent email
   root: {
     render: ({ children }) => (
-      <Container style={{ maxWidth: "800px", width: "100%", margin: "0 auto" }}>{children}</Container>
+      <Container
+        align="left"
+        style={{
+          maxWidth: "800px",
+          width: "100%",
+          margin: "0",
+          textAlign: "left",
+        }}
+      >
+        {children}
+      </Container>
     ),
   },
   components: {
