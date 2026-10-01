@@ -46,7 +46,14 @@ export async function renderEmail(data: Data): Promise<string> {
 
   return render(
     <Html>
-      <Body>
+      <Body
+        style={{
+          margin: 0,
+          padding: 0,
+          textAlign: "left",
+          fontFamily: "Arial, sans-serif",
+        }}
+      >
         {Root ? <Root {...data.root?.props} puck={puck}>{content}</Root> : content}
       </Body>
     </Html>

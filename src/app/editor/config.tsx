@@ -37,12 +37,12 @@ type Components = {
 export const config: Config<Components> = {
   // wraps every block: keeps the email ~800px wide and centered, in the editor and the sent email
   root: {
-    render: ({ children }) => (
+    render: ({ children, puck }) => (
       <div
         style={{
           width: "100%",
           maxWidth: "800px",
-          margin: 0,
+          margin: puck.isEditing ? "0 auto" : "0",
           textAlign: "left",
         }}
       >
@@ -70,10 +70,10 @@ export const config: Config<Components> = {
             type: "select",
             label: "Text size",
             options: [
-              { label: "Small", value: 10 },
-              { label: "Normal", value: 11 },
-              { label: "Large", value: 13 },
-              { label: "Huge", value: 18 },
+            { label: "Small", value: 11 },
+            { label: "Normal", value: 13 },
+            { label: "Large", value: 16 },
+            { label: "Huge", value: 24 },
             ],
           },
           // each font falls back to arial if the reader's device doesn't have it
@@ -96,8 +96,12 @@ export const config: Config<Components> = {
             <Text
               style={{
                 textAlign: "left",
-                fontSize: `${fontSize}pt`,
+                fontSize: `${fontSize}px`,
                 fontFamily: fontFamily ?? "Arial, sans-serif",
+                fontWeight: 400,
+                lineHeight: "1.4",
+                margin: 0,
+                padding: 0,
               }}
             >
               {text}
@@ -246,14 +250,7 @@ export const config: Config<Components> = {
   },
 };
 
-// small default padding around every block, added once here instead of in each render
-// (the editor and the sent email both use these render functions, so both get it)
-for (const block of Object.values(config.components)) {
-  const render = block.render as (props: object) => React.ReactNode;
-  (block as { render: unknown }).render = (props: object) => (
-    <div style={{ padding: "8px" }}>{render(props)}</div>
-  );
-}
+
 
 
 
