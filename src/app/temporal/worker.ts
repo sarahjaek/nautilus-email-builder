@@ -4,6 +4,9 @@ import { NativeConnection, Worker } from "@temporalio/worker";
 import * as activities from "./activities";
 
 async function main() {
+  if (!process.env.RESEND_API_KEY) {
+    throw new Error("RESEND_API_KEY is missing");
+    }
   const connection = await NativeConnection.connect({
     address: process.env.TEMPORAL_ADDRESS ?? "localhost:7233",
     tls: process.env.TEMPORAL_TLS === "true",
@@ -29,9 +32,6 @@ async function main() {
 }
 
 main().catch((error) => {
-  if (!process.env.RESEND_API_KEY) {
-      throw new Error("RESEND_API_KEY is missing");
-      }
   console.error(error);
   process.exitCode = 1;
 });

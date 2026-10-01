@@ -18,13 +18,13 @@ export async function POST(request: Request) {
 
   // 2. check the input before using it
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(recipient ?? "")) {
-    return Response.json({ error: "Invalid recipient email" }, { status: 400 });
+    return NextResponse.json({ error: "Invalid recipient email" }, { status: 400 });
   }
   if (!subject?.trim()) {
-    return Response.json({ error: "Subject is required" }, { status: 400 });
+    return NextResponse.json({ error: "Subject is required" }, { status: 400 });
   }
   if (!Array.isArray(data?.content) || data.content.length === 0) {
-    return Response.json({ error: "Email content is required" }, { status: 400 });
+    return NextResponse.json({ error: "Email content is required" }, { status: 400 });
   }
 
   // 3. turn the puck data into email html, using the same config as the editor
@@ -33,7 +33,7 @@ export async function POST(request: Request) {
     html = await renderEmail(data);
   } catch (err) {
     console.error("Failed to render email:", err);
-    return Response.json({ error: "Failed to render email" }, { status: 500 });
+    return NextResponse.json({ error: "Failed to render email" }, { status: 500 });
   }
 
   // 4. send it
@@ -50,4 +50,5 @@ export async function POST(request: Request) {
       { status: 500 }
     );
   }
+  return NextResponse.json({ id: sent.id });
 }
