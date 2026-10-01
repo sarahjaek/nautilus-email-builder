@@ -38,17 +38,16 @@ export const config: Config<Components> = {
   // wraps every block: keeps the email ~800px wide and centered, in the editor and the sent email
   root: {
     render: ({ children }) => (
-      <Container
-        align="left"
+      <div
         style={{
-          maxWidth: "800px",
           width: "100%",
-          margin: "0",
+          maxWidth: "800px",
+          margin: 0,
           textAlign: "left",
         }}
       >
         {children}
-      </Container>
+      </div>
     ),
   },
   components: {
@@ -162,7 +161,16 @@ export const config: Config<Components> = {
       },
       defaultProps: { content: [], backgroundColor: "#ffffff" },
       render: ({ content: Content, backgroundColor }) => (
-        <Container style={{ backgroundColor }}>
+        <Container
+          align="left"
+          style={{
+            backgroundColor,
+            width: "100%",
+            maxWidth: "100%",
+            margin: 0,
+            textAlign: "left",
+          }}
+        >
           <Content />
         </Container>
       ),
