@@ -7,8 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "worker": "tsx --env-file=.env.local src/app/temporal/worker.ts"
-    },
+    "worker": "tsx --env-file=.env.local src/app/temporal/worker.ts",
+    "worker:prod": "tsx src/app/temporal/worker.ts"
+  },
   "dependencies": {
     "@puckeditor/core": "^0.21.1",
     "@react-email/components": "^1.0.9",
@@ -20,7 +21,8 @@
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-email": "^5.2.9",
-    "resend": "^6.9.3"
+    "resend": "^6.9.3",
+    "tsx": "^4.23.15"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -31,7 +33,6 @@
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
     "tailwindcss": "^4",
-    "tsx": "^4.23.15",
     "typescript": "^5"
   }
 }
